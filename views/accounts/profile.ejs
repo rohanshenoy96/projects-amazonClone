@@ -1,0 +1,19 @@
+<% layout('layout') -%>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 col-md-4">
+			<img class="img-circle img-center" src="<%= user.profile.picture %>">
+			<br>
+			<br>
+			<p>Name: <%= user.profile.name %></p>
+			<p>Email: <%= user.email %></p>
+			<% if(!user.profile.address){ %>
+			<p>Address : <span style="color : #c0392b; font-weight: bold;">You have not defined address</span></p>
+			<% }else{ %>
+			<p>Address: <%= user.profile.address %></p>
+			<% } %>
+			<a href="/edit-profile" class="btn btn-primary btn-lg">Edit Profile</a>
+		</div>
+	</div>
+</div>
