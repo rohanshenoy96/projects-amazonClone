@@ -14,7 +14,7 @@ var secret       = require("./config/secret");
 var User   	     = require("./models/user.js");
 var Category     = require("./models/category");
 
-
+var cartLength   = require("./middleware/middleware");
 
 var app = express();
 
@@ -49,6 +49,9 @@ app.use(function(req, res, next){
 	res.locals.user = req.user||null;
 	next();
 });
+
+app.use(cartLength);
+
 app.use(function(req, res, next){
 	Category.find({}, function(err, categories){
 		if(err) return next(err);

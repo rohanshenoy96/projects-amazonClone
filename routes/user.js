@@ -2,6 +2,8 @@ var router       = require("express").Router();
 var User         = require("../models/user.js");
 var passport     = require("passport");
 var passportConf = require("../config/passport"); 
+var Cart 		 = require("../models/cart");
+var async 		 = require("async");
 
 //login routes
 router.get("/login", function(req,res){
@@ -19,6 +21,7 @@ router.post("/login", passport.authenticate('local-login', {
 
 //profile page
 router.get("/profile", function(req, res, next){
+	// console.log(req.user);
 	User.findOne({_id : req.user._id}, function(err, user){
 		if(err) return next(err);
 		res.render("accounts/profile",{user : user});
@@ -33,29 +36,40 @@ router.get("/signup", function(req, res){
 });
 
 router.post('/signup', function(req, res, next){
-	var user = new User();
-
-	user.profile.name = req.body.name;
-	user.email = req.body.email;
-	user.password = req.body.password;
-	user.profile.picture = user.gravatar();
-	
-	User.findOne( { email : req.body.email }, function(err, existingUser) {
-		if(existingUser){
-			 // console.log(req.body.email + "already exists");
-			req.flash('errors', 'Account with that email already exists');
-			return res.redirect("/signup");
-		}
-		else{
-			user.save(function(err, user){
+	async.waterfall([
+		function(callback){
+			var user = new User();
+			user.profile.name = req.body.name;
+			user.email = req.body.email;
+			user.password = req.body.password;
+			user.profile.picture = user.gravatar();
+			
+			User.findOne( { email : req.body.email }, function(err, existingUser) {
+				if(existingUser){
+					 // console.log(req.body.email + "already exists");
+					req.flash('errors', 'Account with that email already exists');
+					return res.redirect("/signup");
+				}
+				else{
+					user.save(function(err, user){
+						if(err) return next(err);
+						callback(null,user);
+					});
+				}
+			});
+		},
+		function(user,callback){
+			var cart = new Cart();
+			cart.owner = user._id;
+			cart.save(function(err){
 				if(err) return next(err);
 				req.logIn(user, function(err){
 					if(err) return next(err);
-					res.redirect("/profile");
-				});
-			});
+					res.redirect("/profile")
+				})
+			})
 		}
-	});
+	]);
 });
 
 //edit routes

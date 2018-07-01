@@ -6,18 +6,16 @@ var mongoosastic = require("mongoosastic");
 var ProductSchema = new Schema({
 	category : {
 		type : Schema.Types.ObjectId,
-		ref : 'Category',
+		ref : 'Category'
 	},
-	name : {
-		type : String,
-		es_type: 'text'
+	name : String,
+	price : {
+		type : Number,
+		merged_type : 'double'
 	},
-	price : Number,
-	image : {
-		type : String,
-		es_type: 'text'
-	} 
+	image : String
 });
+//plugin
 ProductSchema.plugin(mongoosastic, {
 	hosts : [
 	'localhost:9200'

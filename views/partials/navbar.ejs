@@ -7,6 +7,13 @@
           <a class="navbar-brand" href="/"><p style="font-family: "Comic Sans MS", cursive, sans-serif">Amazon</p></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+        <form class="navbar-form navbar-left" method="POST" action="/search">
+            <div class="form-group">
+              <input type="text" name="q" class="form-control" placeholder="Search...">
+              <button type="Submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">Category</a>
@@ -33,6 +40,11 @@
                 <li class="text-center"><a href="/logout">Logout</a></li>
               </ul>
             </li>
+            <% } %>
+            <% if(user){ %>
+              <li><a href="/cart" class="glyphicon glyphicon-shopping-cart"><span class="badge"><%= cart %></span></a></li>
+            <% }else{ %>
+              <li><a href="/cart" class="glyphicon glyphicon-shopping-cart"><span class="badge">0</span></a></li>
             <% } %>
           </ul>
         </div><!--/.navbar-collapse -->

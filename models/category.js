@@ -6,7 +6,6 @@ var CategorySchema = new Schema({
 	name : {
 		type : String,
 		unique : true,
-		es_type : 'text',
 		lowercase : true
 	}
 });
